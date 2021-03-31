@@ -6,7 +6,7 @@ from secrets import token_hex
 
 from lumibot.brokers import Broker
 from lumibot.entities import Order, Position
-from lumibot.tools import get_trading_days
+from lumibot.tools import YahooHelper as yh
 from lumibot.trading_builtins import CustomStream
 
 
@@ -26,7 +26,7 @@ class BacktestingBroker(Broker):
                 "object %r is not a backteesting data_source" % data_source
             )
         self._data_source = data_source
-        self._trading_days = get_trading_days()
+        self._trading_days = yh.get_trading_days()
 
         Broker.__init__(self, name=self.name, connect_stream=connect_stream)
 

@@ -1,9 +1,8 @@
 from datetime import datetime
 
-import yfinance as yf
-
 from lumibot.data_sources.exceptions import NoDataFound
 from lumibot.entities import Bars
+from lumibot.tools import YahooHelper as yh
 
 from .data_source import DataSource
 
@@ -46,7 +45,7 @@ class YahooData(DataSource):
         if symbol in self._data_store:
             data = self._data_store[symbol]
         else:
-            data = yf.Ticker(symbol).history(period="max", auto_adjust=self.auto_adjust)
+            data = yh.fetch_symbol_data(symbol, auto_adjust=self.auto_adjust)
             if data.shape[0] == 0:
                 raise NoDataFound(self.SOURCE, symbol)
             data = self._append_data(symbol, data)
@@ -65,10 +64,10 @@ class YahooData(DataSource):
         missing_symbols = [
             symbol for symbol in symbols if symbol not in self._data_store
         ]
-        tickers = yf.Tickers(" ".join(missing_symbols))
-        for ticker in tickers.tickers:
-            data = ticker.history(period="max", auto_adjust=self.auto_adjust)
-            self._append_data(ticker.ticker, data)
+        if missing_symbols:
+            data = yh.fetch_symbols_data(missing_symbols, auto_adjust=self.auto_adjust)
+            for symbol, df in data.items():
+                self._append_data(symbol, df)
 
         result = {}
         for symbol in symbols:

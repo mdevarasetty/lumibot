@@ -2,8 +2,6 @@ import logging
 import os
 import sys
 
-import yfinance as yf
-
 
 def get_chunks(l, chunk_size):
     chunks = []
@@ -29,19 +27,6 @@ def deduplicate_sequence(seq, key=""):
             pos += 1
     del seq[pos:]
     return seq
-
-
-def get_trading_days():
-    """Requesting data for the oldest company,
-    Consolidated Edison from yahoo finance.
-    Storing the trading days."""
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    logging.info("Fetching past trading days")
-    ticker = yf.Ticker("ED")
-    history = ticker.history(period="max")
-    days = [d.date() for d in history.index]
-    return days
 
 
 class ComparaisonMixin:

@@ -4,7 +4,8 @@ from copy import deepcopy
 import pandas as pd
 
 from lumibot.backtesting import BacktestingBroker
-from lumibot.tools import day_deduplicate, get_risk_free_rate, stats_summary
+from lumibot.tools import YahooHelper as yh
+from lumibot.tools import day_deduplicate, stats_summary
 from lumibot.traders import Trader
 
 from .strategy_executor import StrategyExecutor
@@ -57,7 +58,7 @@ class _Strategy:
         self._analysis = {}
         if risk_free_rate is None:
             # Get risk free rate from US Treasuries by default
-            self._risk_free_rate = get_risk_free_rate()
+            self._risk_free_rate = yh.get_risk_free_rate()
         else:
             self._risk_free_rate = risk_free_rate
 
