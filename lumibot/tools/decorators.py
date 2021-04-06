@@ -1,6 +1,7 @@
 import sys
 from copy import deepcopy
-from functools import wraps
+from datetime import datetime, timedelta, timezone
+from functools import lru_cache, wraps
 
 
 def staticdecorator(func):
@@ -72,3 +73,29 @@ def execute_after(actions):
         return output_func
 
     return decorator_func
+
+
+def datetime_cache(dt):
+    def _wrapper(f):
+        if dt.tzinfo is None:
+            raise ValueError(
+                "datetime_cache decorator takes only aware datetime as parameter"
+            )
+
+        next_update = dt.replace(tzinfo=timezone.utc)
+        f = lru_cache(None)(f)
+
+        @wraps(f)
+        def _wrapped(*args, **kwargs):
+            nonlocal next_update
+            now = datetime.utcnow()
+            if now >= next_update:
+                f.cache_clear()
+                next_update = next_update + timedelta(days=1)
+
+            print("Here")
+            return f(*args, **kwargs)
+
+        return _wrapped
+
+    return _wrapper()
