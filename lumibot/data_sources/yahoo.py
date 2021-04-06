@@ -48,7 +48,7 @@ class YahooData(DataSource):
         if symbol in self._data_store:
             data = self._data_store[symbol]
         else:
-            data = yh.fetch_symbol_data(symbol, auto_adjust=self.auto_adjust)
+            data = yh.get_symbol_data(symbol, auto_adjust=self.auto_adjust)
             if data.shape[0] == 0:
                 raise NoDataFound(self.SOURCE, symbol)
             data = self._append_data(symbol, data)
@@ -68,7 +68,7 @@ class YahooData(DataSource):
             symbol for symbol in symbols if symbol not in self._data_store
         ]
         if missing_symbols:
-            data = yh.fetch_symbols_data(missing_symbols, auto_adjust=self.auto_adjust)
+            data = yh.get_symbols_data(missing_symbols, auto_adjust=self.auto_adjust)
             for symbol, df in data.items():
                 self._append_data(symbol, df)
 

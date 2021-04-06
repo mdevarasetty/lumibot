@@ -131,7 +131,7 @@ def performance(_df, risk_free, prefix=""):
 
 
 def calculate_returns(symbol, start=datetime(1900, 1, 1), end=datetime.now()):
-    benchmark_df = yh.fetch_symbol_data(symbol)
+    benchmark_df = yh.get_symbol_data(symbol)
     benchmark_df = benchmark_df.loc[
         (benchmark_df.index >= start) & (benchmark_df.index <= end)
     ]
