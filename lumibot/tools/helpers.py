@@ -1,6 +1,9 @@
 import logging
 import os
 import sys
+from datetime import datetime
+
+from lumibot import LUMIBOT_DEFAULT_PYTZ
 
 
 def get_chunks(l, chunk_size):
@@ -91,3 +94,7 @@ def print_progress_bar(
     line = f"\r{prefix} |{bar}| {percent_str}% {suffix}"
     file.write(line)
     file.flush()
+
+
+def get_lumibot_datetime():
+    return datetime.now().astimezone(LUMIBOT_DEFAULT_PYTZ)
